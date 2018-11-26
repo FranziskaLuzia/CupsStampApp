@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>607493872722-97bts1slu8n9mn3dfhfd4b94h91hselo.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.607493872722-97bts1slu8n9mn3dfhfd4b94h91hselo</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBxOYhsaOg9MQUJeNOvOP9SCsiedO4l7Iw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>607493872722</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>CupsStamp12</string>
+	<key>PROJECT_ID</key>
+	<string>cupsstampapp</string>
+	<key>STORAGE_BUCKET</key>
+	<string>cupsstampapp.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true></true>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false></false>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:607493872722:ios:dac33b88e575e894</string>
+	<key>DATABASE_URL</key>
+	<string>https://cupsstampapp.firebaseio.com</string>
+</dict>
+</plist>
