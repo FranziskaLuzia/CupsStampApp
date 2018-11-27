@@ -8,55 +8,75 @@
 
 
 import UIKit
+import Firebase
 
-//class StampViewController: UIView {
-//
-//    lazy var filter = CIFilter(name: "CIQRCodeGenerator")
-//    lazy var imageView = UIImageView().withRenderingMode(.alwaysTemplate)
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        let frame = CGRect(origin: .zero, size: .init(width: 320, height: 320))
-//        let view = QRCodeView(frame: frame)
-//        view.generateCode("http://itch.design",
-//                          foregroundColor: UIColor(red:1.00, green:0.02, blue:0.35, alpha:1.00),
-//                          backgroundColor: UIColor(red:1.00, green:0.82, blue:0.86, alpha:1.00))
-//    }
-//
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//        addSubview(imageView)
-//    }
-//
-//    override func layoutSubviews() {
-//        super.layoutSubviews()
-//        imageView.frame = bounds
-//    }
-//
-//    func generateCode(_ string: String, foregroundColor: UIColor = .black, backgroundColor: UIColor = .white) {
-//        guard let filter = filter,
-//            let data = string.data(using: .isoLatin1, allowLossyConversion: false) else {
-//                return
-//        }
-//
-//        filter.setValue(data, forKey: "inputMessage")
-//
-//        guard let ciImage = filter.outputImage else {
-//            return
-//        }
-//
-//        let transformed = ciImage.transformed(by: CGAffineTransform.init(scaleX: 10, y: 10))
-//        let invertFilter = CIFilter(name: "CIColorInvert")
-//        invertFilter?.setValue(transformed, forKey: kCIInputImageKey)
-//
-//        let alphaFilter = CIFilter(name: "CIMaskToAlpha")
-//        alphaFilter?.setValue(invertFilter?.outputImage, forKey: kCIInputImageKey)
-//
-//        if let outputImage = alphaFilter?.outputImage  {
-//            imageView.tintColor = foregroundColor
-//            imageView.backgroundColor = backgroundColor
-//            imageView.image = UIImage(ciImage: outputImage, scale: 2.0, orientation: .up)
-//                .withRenderingMode(.alwaysTemplate)
-//        }
-//    }
-//}
+class StampViewController: UIViewController {
+    static let segueIdentifier = "showMain"
+
+    @IBOutlet weak var greetingLabel: UILabel!
+    @IBOutlet var stars: [UIImageView]!
+
+    private let currentUserId = Firebase.Auth.auth().currentUser?.uid ?? ""
+    private lazy var documentReference: DocumentReference = {
+        return Firestore.firestore().collection("users").document(currentUserId)
+    }()
+    private lazy var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH"
+        return formatter
+    }()
+
+    // TODO: load label smartly
+    private var greeting: String {
+        let hours = Int(self.dateFormatter.string(from: Date()))!
+        return hours < 12 ? "Good morning" : "Good afternoon"
+    }
+
+    private var user: User? {
+        didSet {
+            guard let user = user else { return }
+            greetingLabel.text = greeting + " \(user.name).\nYour punch card looks good!"
+            let string = self.dateFormatter.string(from: Date())
+            print(string)
+            // set stamps
+        }
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // fetch user
+        fetchUser()
+        for star in stars {
+            star.tintColor = .white
+            star.isHidden = false
+        }
+    }
+
+    private func fetchUser() {
+        documentReference.getDocument { [weak self] doc, error in
+            guard let strongSelf = self else { return }
+            guard let doc = doc?.data(), let name = doc[User.Keys.name.rawValue] as? String else { return }
+            let dict = [User.Keys.id.rawValue: strongSelf.currentUserId, User.Keys.name.rawValue: name]
+            if let user = User(dict: dict) {
+                strongSelf.user = user
+            }
+        }
+    }
+
+    @IBAction func didTapLogout(_ sender: Any) {
+        signout()
+    }
+
+    private func signout() {
+        do {
+            try Firebase.Auth.auth().signOut()
+            self.dismiss(animated: false, completion: nil)
+        } catch {
+            UIAlertController.show(title: "Sorry!", message: "Something went wrong.", on: self)
+        }
+    }
+
+    @IBAction func didTapCard(_ sender: Any) {
+
+    }
+}

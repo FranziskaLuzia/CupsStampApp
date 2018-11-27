@@ -25,12 +25,31 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        signInButton.isEnabled = false
+
+        // Check if already signed in
+        if let _ = Firebase.Auth.auth().currentUser {
+            presentMain()
+            return
+        }
+
+        // Tester
+        emailTextfield.text = "florian.thompson@web.de"
+        email = "florian.thompson@web.de"
+        password = "Tester12"
+        signInButton.isEnabled = true
+        passwordTextfield.text = "Tester12"
+
+//        signInButton.isEnabled = false
         signInButton.setTitleColor(UIColor.lightGray, for: .disabled)
         emailTextfield.tag = emailTag
         passwordTextfield.tag = passwordTag
         emailTextfield.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         passwordTextfield.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.isNavigationBarHidden = true
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
@@ -60,7 +79,7 @@ class LoginViewController: UIViewController {
             }
 
             if let _ = result?.user {
-                // login successful, present main view
+                strongSelf.presentMain()
             }
         }
     }
@@ -71,12 +90,22 @@ class LoginViewController: UIViewController {
             let password = password,
             email.trimmingCharacters(in: .whitespaces).count > 0,
             password.trimmingCharacters(in: .whitespaces).count > 0
-            else {
-                signInButton.isEnabled = false
-                return
+        else {
+            signInButton.isEnabled = false
+            return
         }
-        
+
         signInButton.isEnabled = true
+    }
+}
+
+// Mark: Navigation
+
+extension LoginViewController {
+    private func presentMain() {
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "Main")
+        present(vc, animated: false, completion: nil)
     }
 }
 

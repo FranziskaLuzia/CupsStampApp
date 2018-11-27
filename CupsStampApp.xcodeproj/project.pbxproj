@@ -14,7 +14,6 @@
 		67427AE52173AE8300AA8E05 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67427AE42173AE8300AA8E05 /* Assets.xcassets */; };
 		67427AE82173AE8300AA8E05 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67427AE62173AE8300AA8E05 /* LaunchScreen.storyboard */; };
 		67507E8F219312EE00FD07B2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 67507E8E219312EE00FD07B2 /* GoogleService-Info.plist */; };
-		677CCFF3219AEEE400D2E5C4 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677CCFF2219AEEE400D2E5C4 /* MenuViewController.swift */; };
 		677CCFF5219AEF0100D2E5C4 /* StampViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677CCFF4219AEF0100D2E5C4 /* StampViewController.swift */; };
 		67C04AF9217F2FCB0079EB6A /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C04AF8217F2FCB0079EB6A /* SignUpViewController.swift */; };
 		D469F533AE6FA40DF9BCFA01 /* Pods_CupsStampApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DB01EF98FC2216CFEE15B73 /* Pods_CupsStampApp.framework */; };
@@ -31,7 +30,6 @@
 		67427AE72173AE8300AA8E05 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		67427AE92173AE8300AA8E05 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		67507E8E219312EE00FD07B2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		677CCFF2219AEEE400D2E5C4 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		677CCFF4219AEF0100D2E5C4 /* StampViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampViewController.swift; sourceTree = "<group>"; };
 		67C04AF8217F2FCB0079EB6A /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		67C2BE0A21A866E2004B8189 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
@@ -91,7 +89,6 @@
 			children = (
 				67427ADC2173AE8000AA8E05 /* LoginViewController.swift */,
 				67C04AF8217F2FCB0079EB6A /* SignUpViewController.swift */,
-				677CCFF2219AEEE400D2E5C4 /* MenuViewController.swift */,
 				677CCFF4219AEF0100D2E5C4 /* StampViewController.swift */,
 			);
 			path = Controller;
@@ -254,7 +251,6 @@
 			files = (
 				677CCFF5219AEF0100D2E5C4 /* StampViewController.swift in Sources */,
 				67427AE32173AE8000AA8E05 /* CupsStampApp.xcdatamodeld in Sources */,
-				677CCFF3219AEEE400D2E5C4 /* MenuViewController.swift in Sources */,
 				67427ADD2173AE8000AA8E05 /* LoginViewController.swift in Sources */,
 				67427ADB2173AE8000AA8E05 /* AppDelegate.swift in Sources */,
 				67C04AF9217F2FCB0079EB6A /* SignUpViewController.swift in Sources */,

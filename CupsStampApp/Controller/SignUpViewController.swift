@@ -26,8 +26,8 @@ class User {
     
     convenience init?(dict: [String: Any]) {
         guard
-            let id = dict[User.Keys.name.rawValue] as? String,
-            let name = dict[User.Keys.id.rawValue] as? String
+            let id = dict[User.Keys.id.rawValue] as? String,
+            let name = dict[User.Keys.name.rawValue] as? String
         else {
             return nil
         }
@@ -105,25 +105,51 @@ class SignUpViewController: UIViewController {
         
         signupButton.isEnabled = true
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.isNavigationBarHidden = false
+    }
     
     @IBAction func didTapSignupButton(_ sender: Any) {
         guard let name = name, let email = email, let password = password else {
             return
         }
-        
-        Firebase.Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+
+        Firebase.Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
             guard let strongSelf = self else { return }
-            if let _ = error {
-                UIAlertController.show(title: "We're Sorry!", message: "Something went wrong.", on: strongSelf)
+            if let error = error {
+                UIAlertController.show(title: "We're Sorry!", message: error.localizedDescription, on: strongSelf)
             }
-            
-            // get user
+
+            // save user
             if let firUser = result?.user {
                 let user = User(id: firUser.uid, name: name)
                 user.persistToFirebase()
+                strongSelf.presentMain()
             }
         }
 
         print("signing up with: email: \(email), password: \(password), name: \(name)")
+    }
+}
+
+// Mark: Navigation
+
+extension SignUpViewController {
+    private func resetTextFields() {
+        emailTextfield.text = ""
+        passwordTextfield.text = ""
+        nameTextfield.text = ""
+        email = ""
+        password = ""
+        name = ""
+    }
+
+    private func presentMain() {
+        resetTextFields()
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "Main")
+        present(vc, animated: false, completion: nil)
     }
 }
