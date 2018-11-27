@@ -14,25 +14,41 @@ class User {
     enum Keys: String {
         case name
         case id
+        case stamps
     }
 
     let id: String
     let name: String
+    private(set) var stamps: Int
     
-    init(id: String, name: String) {
+    init(id: String, name: String, stamps: Int = 0) {
         self.id = id
         self.name = name
+        self.stamps = stamps
     }
     
     convenience init?(dict: [String: Any]) {
         guard
             let id = dict[User.Keys.id.rawValue] as? String,
-            let name = dict[User.Keys.name.rawValue] as? String
+            let name = dict[User.Keys.name.rawValue] as? String,
+            let stamps = dict[User.Keys.stamps.rawValue] as? Int
         else {
             return nil
         }
         
-        self.init(id: id, name: name)
+        self.init(id: id, name: name, stamps: stamps)
+    }
+
+    func addStamp() {
+        stamps += 1
+        let doc = Firestore.firestore().collection("users").document(id)
+        doc.updateData([User.Keys.stamps.rawValue: stamps])
+    }
+}
+
+extension User: Equatable {
+    static func == (lhs: User, rhs: User) -> Bool {
+        return (lhs.id + lhs.name + "\(lhs.stamps)") == (rhs.id + rhs.name + "\(rhs.stamps)")
     }
 }
 

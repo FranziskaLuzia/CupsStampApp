@@ -12,9 +12,11 @@ import Firebase
 
 class StampViewController: UIViewController {
     static let segueIdentifier = "showMain"
+    static let starPassword = "Tester12"
 
     @IBOutlet weak var greetingLabel: UILabel!
     @IBOutlet var stars: [UIImageView]!
+    @IBOutlet weak var earnedDrinksButton: UIButton!
 
     private let currentUserId = Firebase.Auth.auth().currentUser?.uid ?? ""
     private lazy var documentReference: DocumentReference = {
@@ -26,7 +28,6 @@ class StampViewController: UIViewController {
         return formatter
     }()
 
-    // TODO: load label smartly
     private var greeting: String {
         let hours = Int(self.dateFormatter.string(from: Date()))!
         return hours < 12 ? "Good morning" : "Good afternoon"
@@ -36,27 +37,51 @@ class StampViewController: UIViewController {
         didSet {
             guard let user = user else { return }
             greetingLabel.text = greeting + " \(user.name).\nYour punch card looks good!"
-            let string = self.dateFormatter.string(from: Date())
-            print(string)
-            // set stamps
+            updateStars()
+        }
+    }
+
+    private func updateStars() {
+        guard let stamps = user?.stamps else {
+            return
+        }
+
+        let numberOfStars = stamps % 10
+        let numberOfRewards = Int(stamps / 10)
+        earnedDrinksButton.isHidden = numberOfRewards == 0
+        earnedDrinksButton.setTitle("\(numberOfRewards)", for: .normal)
+
+        for (index, star) in stars.enumerated() {
+            if index <= numberOfStars - 1 {
+                star.tintColor = .white
+                star.isHidden = false
+            } else {
+                star.isHidden = true
+            }
         }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // fetch user
         fetchUser()
-        for star in stars {
-            star.tintColor = .white
-            star.isHidden = false
-        }
+        earnedDrinksButton.layer.cornerRadius = 15
+        earnedDrinksButton.isHidden = true
     }
 
     private func fetchUser() {
         documentReference.getDocument { [weak self] doc, error in
             guard let strongSelf = self else { return }
-            guard let doc = doc?.data(), let name = doc[User.Keys.name.rawValue] as? String else { return }
-            let dict = [User.Keys.id.rawValue: strongSelf.currentUserId, User.Keys.name.rawValue: name]
+            guard
+                let doc = doc?.data(),
+                let name = doc[User.Keys.name.rawValue] as? String,
+                let stamps = doc[User.Keys.stamps.rawValue] as? Int
+            else {
+                return
+            }
+
+            let dict: [String: Any] = [User.Keys.id.rawValue: strongSelf.currentUserId,
+                        User.Keys.name.rawValue: name,
+                        User.Keys.stamps.rawValue: stamps]
             if let user = User(dict: dict) {
                 strongSelf.user = user
             }
@@ -77,6 +102,30 @@ class StampViewController: UIViewController {
     }
 
     @IBAction func didTapCard(_ sender: Any) {
+        showInputPopup() { [weak self] input in
+            guard let strongSelf = self else { return }
+            if input == StampViewController.starPassword {
+                strongSelf.user?.addStamp()
+                strongSelf.updateStars()
+            } else if input.count > 0 {
+                UIAlertController.show(title: "Sorry", message: "The password was wrong.", on: strongSelf)
+            }
+        }
+    }
 
+    private func showInputPopup(completion: @escaping (String) -> Void) {
+        let alert = UIAlertController(title: nil, message: "Show this to someone from Cups", preferredStyle: .alert)
+        alert.addTextField { field in
+            field.placeholder = "Password"
+        }
+        let okAction = UIAlertAction(title: "OK", style: .default) { action in
+            let field = alert.textFields!.first!
+            completion(field.text ?? "")
+        }
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        alert.addAction(okAction)
+        alert.addAction(cancelAction)
+        self.present(alert, animated: true, completion: nil)
     }
 }

@@ -296,15 +296,28 @@
                                             <constraint firstAttribute="bottom" secondItem="TFv-7k-Pxr" secondAttribute="bottom" constant="9" id="ytF-0k-PNd"/>
                                         </constraints>
                                     </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wxQ-Rj-h8B">
+                                        <rect key="frame" x="319" y="-10" width="30" height="30"/>
+                                        <color key="backgroundColor" red="1" green="0.57637232540000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="1b0-an-nVU"/>
+                                            <constraint firstAttribute="width" constant="30" id="8bE-8e-7hD"/>
+                                        </constraints>
+                                        <state key="normal" title="1">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="W85-Ca-lYd" secondAttribute="bottom" constant="14.5" id="BYD-02-fGZ"/>
+                                    <constraint firstAttribute="trailing" secondItem="wxQ-Rj-h8B" secondAttribute="trailing" constant="-6" id="IaQ-Ba-vBo"/>
                                     <constraint firstItem="W85-Ca-lYd" firstAttribute="top" secondItem="POF-gA-gLT" secondAttribute="top" constant="14.5" id="JAt-Gh-xGy"/>
                                     <constraint firstAttribute="trailing" secondItem="W85-Ca-lYd" secondAttribute="trailing" id="JIa-qY-D9n"/>
                                     <constraint firstItem="W85-Ca-lYd" firstAttribute="leading" secondItem="POF-gA-gLT" secondAttribute="leading" id="RTK-1t-Z5M"/>
                                     <constraint firstAttribute="width" secondItem="POF-gA-gLT" secondAttribute="height" multiplier="343:164" id="ZDP-RD-N0h"/>
+                                    <constraint firstItem="W85-Ca-lYd" firstAttribute="top" secondItem="wxQ-Rj-h8B" secondAttribute="bottom" constant="-5.5" id="d6d-SC-pml"/>
                                 </constraints>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="yCJ-gr-uaQ" appends="YES" id="tY7-hm-NvK"/>
@@ -340,17 +353,18 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Item 2" image="Coffee_cup_20" selectedImage="Credit_Card_16" id="hBj-nv-Egp"/>
                     <connections>
+                        <outlet property="earnedDrinksButton" destination="wxQ-Rj-h8B" id="WuX-ZS-z6c"/>
                         <outlet property="greetingLabel" destination="Qx3-7I-kUP" id="4Fs-Hd-e41"/>
-                        <outletCollection property="stars" destination="cH3-sd-YUE" collectionClass="NSMutableArray" id="cst-nK-FF3"/>
-                        <outletCollection property="stars" destination="FC5-7m-Gby" collectionClass="NSMutableArray" id="kyc-Xy-sch"/>
-                        <outletCollection property="stars" destination="Fa3-U3-POc" collectionClass="NSMutableArray" id="vhW-gQ-j9m"/>
-                        <outletCollection property="stars" destination="MgY-vk-9cQ" collectionClass="NSMutableArray" id="EAH-OD-Sjt"/>
-                        <outletCollection property="stars" destination="TFv-7k-Pxr" collectionClass="NSMutableArray" id="Y07-QZ-dQt"/>
-                        <outletCollection property="stars" destination="qNx-PX-aD0" collectionClass="NSMutableArray" id="HH8-Ok-vWy"/>
-                        <outletCollection property="stars" destination="W6g-en-597" collectionClass="NSMutableArray" id="JCE-Ey-VUB"/>
-                        <outletCollection property="stars" destination="duF-PN-OBL" collectionClass="NSMutableArray" id="8rX-9F-wvh"/>
-                        <outletCollection property="stars" destination="Isa-gp-8nN" collectionClass="NSMutableArray" id="NJ2-Ps-ELL"/>
-                        <outletCollection property="stars" destination="w2j-Mb-rDn" collectionClass="NSMutableArray" id="eVP-Zl-h6D"/>
+                        <outletCollection property="stars" destination="w2j-Mb-rDn" collectionClass="NSMutableArray" id="mF7-UA-fxq"/>
+                        <outletCollection property="stars" destination="cH3-sd-YUE" collectionClass="NSMutableArray" id="77T-Os-RhY"/>
+                        <outletCollection property="stars" destination="Fa3-U3-POc" collectionClass="NSMutableArray" id="2aM-hg-2Wl"/>
+                        <outletCollection property="stars" destination="FC5-7m-Gby" collectionClass="NSMutableArray" id="Nqz-6v-vGR"/>
+                        <outletCollection property="stars" destination="MgY-vk-9cQ" collectionClass="NSMutableArray" id="C6S-kR-FnX"/>
+                        <outletCollection property="stars" destination="TFv-7k-Pxr" collectionClass="NSMutableArray" id="IpH-38-uGj"/>
+                        <outletCollection property="stars" destination="qNx-PX-aD0" collectionClass="NSMutableArray" id="xtm-du-BcA"/>
+                        <outletCollection property="stars" destination="W6g-en-597" collectionClass="NSMutableArray" id="NIz-1d-b48"/>
+                        <outletCollection property="stars" destination="duF-PN-OBL" collectionClass="NSMutableArray" id="u0C-aW-aWT"/>
+                        <outletCollection property="stars" destination="Isa-gp-8nN" collectionClass="NSMutableArray" id="FwT-iy-4O1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AsN-DW-adt" userLabel="First Responder" sceneMemberID="firstResponder"/>
