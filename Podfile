@@ -1,7 +1,7 @@
 project 'CupsStampApp.xcodeproj'
 
 # Uncomment the next line to define a global platform for your project
-# platform :ios, '12.0'
+platform :ios, '12.0'
 
 target 'CupsStampApp' do
 inherit! :search_paths
@@ -9,7 +9,7 @@ inherit! :search_paths
   use_frameworks!
 
   # Pods for CupsStampApp
-  
+
   pod 'Firebase/Auth'
   pod 'Firebase/Core'
   pod 'Firebase/Firestore'
