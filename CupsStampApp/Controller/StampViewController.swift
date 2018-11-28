@@ -34,10 +34,15 @@ class StampViewController: UIViewController {
         return hours < 12 ? "Good morning" : "Good afternoon"
     }
 
+    private var punchCardStatus: String {
+        guard let user = user else { return "" }
+        return user.stamps >= 7 ? "Your punch card looks good!" : "Let's get some more coffee!"
+    }
+
     private var user: User? {
         didSet {
             guard let user = user else { return }
-            greetingLabel.text = greeting + " \(user.name).\nYour punch card looks good!"
+            greetingLabel.text = greeting + " \(user.name).\n" + punchCardStatus
             updateStars()
         }
     }
@@ -128,17 +133,12 @@ extension StampViewController {
 
 extension StampViewController {
     private func updateStars() {
-        guard let stamps = user?.stamps else {
-            return
-        }
-
-        let numberOfStars = stamps % 10
-        let numberOfRewards = Int(stamps / 10)
-        earnedDrinksButton.isHidden = numberOfRewards == 0
-        earnedDrinksButton.setTitle("\(numberOfRewards)", for: .normal)
+        guard let user = user else { return }
+        earnedDrinksButton.isHidden = user.numberOfDrinksToRedeem == 0
+        earnedDrinksButton.setTitle("\(user.numberOfDrinksToRedeem)", for: .normal)
 
         for (index, star) in stars.enumerated() {
-            if index <= numberOfStars - 1 {
+            if index <= user.numberOfStars - 1 {
                 star.tintColor = .white
                 star.isHidden = false
             } else {
