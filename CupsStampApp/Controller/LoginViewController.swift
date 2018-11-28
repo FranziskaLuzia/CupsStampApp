@@ -32,14 +32,7 @@ class LoginViewController: UIViewController {
             return
         }
 
-        // Tester
-        emailTextfield.text = "florian.thompson@web.de"
-        email = "florian.thompson@web.de"
-        password = "Tester12"
-        signInButton.isEnabled = true
-        passwordTextfield.text = "Tester12"
-
-//        signInButton.isEnabled = false
+        signInButton.isEnabled = false
         signInButton.setTitleColor(UIColor.lightGray, for: .disabled)
         emailTextfield.tag = emailTag
         passwordTextfield.tag = passwordTag

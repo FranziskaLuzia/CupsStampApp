@@ -2,7 +2,7 @@
 //  User+Network.swift
 //  CupsStampApp
 //
-//  Created by Florian Thompson on 11/28/18.
+//  Created by Franziska Kammerl on 11/28/18.
 //  Copyright © 2018 Franziska Kammerl. All rights reserved.
 //
 
@@ -26,7 +26,6 @@ extension User {
                 let name = doc[User.Keys.name.rawValue] as? String,
                 let stamps = doc[User.Keys.stamps.rawValue] as? Int
             else { return completion(nil) }
-Test
             let dict: [String: Any] = [User.Keys.id.rawValue: currentUserId,
                                        User.Keys.name.rawValue: name,
                                        User.Keys.stamps.rawValue: stamps]
