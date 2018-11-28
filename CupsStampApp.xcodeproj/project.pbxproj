@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		17218F9121AEB1F400BAC990 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17218F9021AEB1F400BAC990 /* User.swift */; };
+		17218F9321AF3A6F00BAC990 /* User+Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17218F9221AF3A6F00BAC990 /* User+Network.swift */; };
 		67427ADB2173AE8000AA8E05 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67427ADA2173AE8000AA8E05 /* AppDelegate.swift */; };
 		67427ADD2173AE8000AA8E05 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67427ADC2173AE8000AA8E05 /* LoginViewController.swift */; };
 		67427AE02173AE8000AA8E05 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67427ADE2173AE8000AA8E05 /* Main.storyboard */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		17218F9021AEB1F400BAC990 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		17218F9221AF3A6F00BAC990 /* User+Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+Network.swift"; sourceTree = "<group>"; };
 		5DB01EF98FC2216CFEE15B73 /* Pods_CupsStampApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CupsStampApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		67427AD72173AE8000AA8E05 /* CupsStampApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CupsStampApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		67427ADA2173AE8000AA8E05 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -57,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				17218F9021AEB1F400BAC990 /* User.swift */,
+				17218F9221AF3A6F00BAC990 /* User+Network.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -264,6 +267,7 @@
 				67427AE32173AE8000AA8E05 /* CupsStampApp.xcdatamodeld in Sources */,
 				17218F9121AEB1F400BAC990 /* User.swift in Sources */,
 				67427ADD2173AE8000AA8E05 /* LoginViewController.swift in Sources */,
+				17218F9321AF3A6F00BAC990 /* User+Network.swift in Sources */,
 				67427ADB2173AE8000AA8E05 /* AppDelegate.swift in Sources */,
 				67C04AF9217F2FCB0079EB6A /* SignUpViewController.swift in Sources */,
 			);

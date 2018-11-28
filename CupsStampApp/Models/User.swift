@@ -9,16 +9,22 @@
 import Foundation
 import FirebaseFirestore
 
-class User {
-    enum Keys: String {
+class User: NSObject {
+    enum Keys: String, CodingKey {
         case name
         case id
         case stamps
     }
 
+    static let documentIdentifier = "user"
+
     let id: String
     let name: String
-    private(set) var stamps: Int
+    var stamps: Int {
+        didSet {
+            persistLocally()
+        }
+    }
 
     var numberOfStars: Int {
         return stamps % 10
@@ -32,6 +38,9 @@ class User {
         self.id = id
         self.name = name
         self.stamps = stamps
+        super.init()
+
+        persistLocally()
     }
 
     convenience init?(dict: [String: Any]) {
@@ -39,15 +48,22 @@ class User {
             let id = dict[User.Keys.id.rawValue] as? String,
             let name = dict[User.Keys.name.rawValue] as? String,
             let stamps = dict[User.Keys.stamps.rawValue] as? Int
-            else {
-                return nil
+        else {
+            return nil
         }
 
         self.init(id: id, name: name, stamps: stamps)
     }
 
-    func addStamp() {
-        stamps += 1
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: Keys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        stamps = try container.decode(Int.self, forKey: .stamps)
+    }
+
+    func addStamp(_ numberOfStamps: Int) {
+        stamps += numberOfStamps
         updateStampsOnBackend()
     }
 
@@ -56,18 +72,25 @@ class User {
         stamps -= 10
         updateStampsOnBackend()
     }
+
+    private func persistLocally() {
+        let encoder = JSONEncoder()
+        do {
+            let encoded = try encoder.encode(self)
+            let defaults = UserDefaults.standard
+            defaults.set(encoded, forKey: User.documentIdentifier)
+            defaults.synchronize()
+        } catch {
+            print("archiving failed")
+        }
+    }
 }
 
-// MARK: Network
-
-extension User {
-    func persistToFirebase() {
-        let doc = Firestore.firestore().collection("users").document(id)
-        doc.setData([Keys.name.rawValue: name])
-    }
-
-    private func updateStampsOnBackend() {
-        let doc = Firestore.firestore().collection("users").document(id)
-        doc.updateData([User.Keys.stamps.rawValue: stamps])
+extension User: Codable {
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: Keys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(stamps, forKey: .stamps )
     }
 }

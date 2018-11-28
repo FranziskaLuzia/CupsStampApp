@@ -18,59 +18,51 @@ class StampViewController: UIViewController {
     @IBOutlet weak var greetingLabel: UILabel!
     @IBOutlet var stars: [UIImageView]!
     @IBOutlet weak var earnedDrinksButton: UIButton!
-
-    private let currentUserId = Firebase.Auth.auth().currentUser?.uid ?? ""
-    private lazy var documentReference: DocumentReference = {
-        return Firestore.firestore().collection("users").document(currentUserId)
+    private lazy var pickerContainerView: UIViewController = {
+        let vc = UIViewController()
+        vc.preferredContentSize = CGSize(width: 250,height: 200)
+        let pickerView = UIPickerView(frame: CGRect(x: 0, y: 0, width: 250, height: 200))
+        pickerView.delegate = self
+        pickerView.dataSource = self
+        vc.view.addSubview(pickerView)
+        return vc
     }()
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH"
         return formatter
     }()
-
     private var greeting: String {
         let hours = Int(self.dateFormatter.string(from: Date()))!
         return hours < 12 ? "Good morning" : "Good afternoon"
     }
-
     private var punchCardStatus: String {
         guard let user = user else { return "" }
-        return user.stamps >= 7 ? "Your punch card looks good!" : "Let's get some more coffee!"
+        return user.numberOfStars >= 7 ? "Your punch card looks good!" : "Let's get some more coffee!"
     }
-
     private var user: User? {
         didSet {
-            guard let user = user else { return }
-            greetingLabel.text = greeting + " \(user.name).\n" + punchCardStatus
-            updateStars()
+            guard let user = user, user != oldValue else { return }
+            refresh()
         }
     }
+    private var numberOfStampsToAdd = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchUser()
-        earnedDrinksButton.layer.cornerRadius = 15
         earnedDrinksButton.isHidden = true
+        earnedDrinksButton.layer.cornerRadius = 15
+        loadLocalUser()
+        User.sync() { self.user = $0 }
     }
 
-    private func fetchUser() {
-        documentReference.getDocument { [weak self] doc, error in
-            guard let strongSelf = self else { return }
-            guard
-                let doc = doc?.data(),
-                let name = doc[User.Keys.name.rawValue] as? String,
-                let stamps = doc[User.Keys.stamps.rawValue] as? Int
-            else {
-                return
-            }
-
-            let dict: [String: Any] = [User.Keys.id.rawValue: strongSelf.currentUserId,
-                        User.Keys.name.rawValue: name,
-                        User.Keys.stamps.rawValue: stamps]
-            if let user = User(dict: dict) {
-                strongSelf.user = user
-            }
+    private func loadLocalUser() {
+        do {
+            guard let data = UserDefaults.standard.object(forKey: User.documentIdentifier) as? Data else { return }
+            let user = try JSONDecoder().decode(User.self, from: data)
+            self.user = user
+        } catch {
+            print("Unarchiving failed")
         }
     }
 
@@ -84,7 +76,8 @@ class StampViewController: UIViewController {
     }
 
     private func showInputPopup(completion: @escaping (String) -> Void) {
-        let alert = UIAlertController(title: nil, message: "Show this to someone from Cups", preferredStyle: .alert)
+        let alert = UIAlertController(title: nil, message: "How many stamps do you want to add?", preferredStyle: .alert)
+        alert.setValue(pickerContainerView, forKey: "contentViewController")
         alert.addTextField { field in
             field.placeholder = "Password"
         }
@@ -100,6 +93,24 @@ class StampViewController: UIViewController {
     }
 }
 
+extension StampViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        numberOfStampsToAdd = row + 1
+    }
+
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return String(row + 1)
+    }
+
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 9
+    }
+}
+
 // MARK: Actions
 
 extension StampViewController {
@@ -107,10 +118,11 @@ extension StampViewController {
         showInputPopup() { [weak self] input in
             guard let strongSelf = self else { return }
             if input == StampViewController.starPassword {
-                strongSelf.user?.addStamp()
-                strongSelf.updateStars()
+                strongSelf.user?.addStamp(strongSelf.numberOfStampsToAdd)
+                strongSelf.refresh()
             } else if input.count > 0 {
                 UIAlertController.show(title: "Sorry", message: "The password was wrong.", on: strongSelf)
+                strongSelf.numberOfStampsToAdd = 0
             }
         }
     }
@@ -120,7 +132,7 @@ extension StampViewController {
         UIAlertController.show(title: "", message: "Do you want to redeem a free drink?", on: self, shouldAddCancelButton: true) { [weak self] _ in
             guard let strongSelf = self else { return }
             strongSelf.user?.redeem()
-            strongSelf.updateStars()
+            strongSelf.refresh()
         }
     }
 
@@ -132,8 +144,9 @@ extension StampViewController {
 // MARK: Stamp Management
 
 extension StampViewController {
-    private func updateStars() {
+    private func refresh() {
         guard let user = user else { return }
+        greetingLabel.text = greeting + " \(user.name).\n" + punchCardStatus
         earnedDrinksButton.isHidden = user.numberOfDrinksToRedeem == 0
         earnedDrinksButton.setTitle("\(user.numberOfDrinksToRedeem)", for: .normal)
 
