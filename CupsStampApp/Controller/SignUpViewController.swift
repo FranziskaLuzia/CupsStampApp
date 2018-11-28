@@ -41,6 +41,16 @@ class User {
 
     func addStamp() {
         stamps += 1
+        updateStampsOnBackend()
+    }
+
+    func redeem() {
+        guard stamps >= 10 else { return }
+        stamps -= 10
+        updateStampsOnBackend()
+    }
+
+    private func updateStampsOnBackend() {
         let doc = Firestore.firestore().collection("users").document(id)
         doc.updateData([User.Keys.stamps.rawValue: stamps])
     }

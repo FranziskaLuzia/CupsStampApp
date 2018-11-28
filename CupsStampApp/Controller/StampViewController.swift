@@ -9,6 +9,7 @@
 
 import UIKit
 import Firebase
+import FirebaseFirestore
 
 class StampViewController: UIViewController {
     static let segueIdentifier = "showMain"
@@ -41,26 +42,6 @@ class StampViewController: UIViewController {
         }
     }
 
-    private func updateStars() {
-        guard let stamps = user?.stamps else {
-            return
-        }
-
-        let numberOfStars = stamps % 10
-        let numberOfRewards = Int(stamps / 10)
-        earnedDrinksButton.isHidden = numberOfRewards == 0
-        earnedDrinksButton.setTitle("\(numberOfRewards)", for: .normal)
-
-        for (index, star) in stars.enumerated() {
-            if index <= numberOfStars - 1 {
-                star.tintColor = .white
-                star.isHidden = false
-            } else {
-                star.isHidden = true
-            }
-        }
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchUser()
@@ -88,28 +69,12 @@ class StampViewController: UIViewController {
         }
     }
 
-    @IBAction func didTapLogout(_ sender: Any) {
-        signout()
-    }
-
     private func signout() {
         do {
             try Firebase.Auth.auth().signOut()
             self.dismiss(animated: false, completion: nil)
         } catch {
             UIAlertController.show(title: "Sorry!", message: "Something went wrong.", on: self)
-        }
-    }
-
-    @IBAction func didTapCard(_ sender: Any) {
-        showInputPopup() { [weak self] input in
-            guard let strongSelf = self else { return }
-            if input == StampViewController.starPassword {
-                strongSelf.user?.addStamp()
-                strongSelf.updateStars()
-            } else if input.count > 0 {
-                UIAlertController.show(title: "Sorry", message: "The password was wrong.", on: strongSelf)
-            }
         }
     }
 
@@ -127,5 +92,58 @@ class StampViewController: UIViewController {
         alert.addAction(okAction)
         alert.addAction(cancelAction)
         self.present(alert, animated: true, completion: nil)
+    }
+}
+
+// MARK: Actions
+
+extension StampViewController {
+    @IBAction func didTapCard(_ sender: Any) {
+        showInputPopup() { [weak self] input in
+            guard let strongSelf = self else { return }
+            if input == StampViewController.starPassword {
+                strongSelf.user?.addStamp()
+                strongSelf.updateStars()
+            } else if input.count > 0 {
+                UIAlertController.show(title: "Sorry", message: "The password was wrong.", on: strongSelf)
+            }
+        }
+    }
+
+    @IBAction func didTapEarnedDrinksButton(_ sender: Any) {
+        // show alert with to redeem drinks
+        UIAlertController.show(title: "", message: "Do you want to redeem a free drink?", on: self, shouldAddCancelButton: true) { [weak self] _ in
+            guard let strongSelf = self else { return }
+            strongSelf.user?.redeem()
+            strongSelf.updateStars()
+        }
+    }
+
+    @IBAction func didTapLogout(_ sender: Any) {
+        signout()
+    }
+}
+
+// MARK: Stamp Management
+
+extension StampViewController {
+    private func updateStars() {
+        guard let stamps = user?.stamps else {
+            return
+        }
+
+        let numberOfStars = stamps % 10
+        let numberOfRewards = Int(stamps / 10)
+        earnedDrinksButton.isHidden = numberOfRewards == 0
+        earnedDrinksButton.setTitle("\(numberOfRewards)", for: .normal)
+
+        for (index, star) in stars.enumerated() {
+            if index <= numberOfStars - 1 {
+                star.tintColor = .white
+                star.isHidden = false
+            } else {
+                star.isHidden = true
+            }
+        }
     }
 }
