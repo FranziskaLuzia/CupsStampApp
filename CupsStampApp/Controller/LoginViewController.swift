@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Firebase
 
 class LoginViewController: UIViewController {
     @IBOutlet weak var emailTextfield: UITextField!
@@ -26,8 +25,8 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Check if already signed in
-        if let _ = Firebase.Auth.auth().currentUser {
+        // Present main if already signed in
+        if User.isSignedIn {
             presentMain()
             return
         }
@@ -63,15 +62,13 @@ class LoginViewController: UIViewController {
         guard let email = email, let password = password else {
             return
         }
-    
-        Firebase.Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+
+        User.signIn(with: email, password: password) { [weak self] success, error in
             guard let strongSelf = self else { return }
             if let error = error {
-                print(error.localizedDescription)
-                UIAlertController.show(title: "We're Sorry!", message: "Something went wrong. Please double check your email and password.", on: strongSelf)
+                UIAlertController.show(title: "We're Sorry!", message: error.localizedDescription, on: strongSelf)
             }
-
-            if let _ = result?.user {
+            if success {
                 strongSelf.presentMain()
             }
         }

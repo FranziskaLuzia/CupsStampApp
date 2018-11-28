@@ -8,16 +8,14 @@
 
 
 import UIKit
-import Firebase
-import FirebaseFirestore
 
 class StampViewController: UIViewController {
-    static let segueIdentifier = "showMain"
     static let starPassword = "Tester12"
 
     @IBOutlet weak var greetingLabel: UILabel!
     @IBOutlet var stars: [UIImageView]!
     @IBOutlet weak var earnedDrinksButton: UIButton!
+
     private lazy var pickerContainerView: UIViewController = {
         let vc = UIViewController()
         vc.preferredContentSize = CGSize(width: 250,height: 200)
@@ -52,23 +50,13 @@ class StampViewController: UIViewController {
         super.viewDidLoad()
         earnedDrinksButton.isHidden = true
         earnedDrinksButton.layer.cornerRadius = 15
-        loadLocalUser()
+        user = User.fetchLocally()
         User.sync() { self.user = $0 }
-    }
-
-    private func loadLocalUser() {
-        do {
-            guard let data = UserDefaults.standard.object(forKey: User.documentIdentifier) as? Data else { return }
-            let user = try JSONDecoder().decode(User.self, from: data)
-            self.user = user
-        } catch {
-            print("Unarchiving failed")
-        }
     }
 
     private func signout() {
         do {
-            try Firebase.Auth.auth().signOut()
+            try User.signOut()
             self.dismiss(animated: false, completion: nil)
         } catch {
             UIAlertController.show(title: "Sorry!", message: "Something went wrong.", on: self)

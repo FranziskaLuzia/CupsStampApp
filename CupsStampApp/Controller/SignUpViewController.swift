@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Firebase
 
 class SignUpViewController: UIViewController {
     @IBOutlet weak var nameTextfield: UITextField!
@@ -81,16 +80,12 @@ class SignUpViewController: UIViewController {
             return
         }
 
-        Firebase.Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
+        User.signUp(with: email, password: password, name: name) { [weak self] success, error in
             guard let strongSelf = self else { return }
             if let error = error {
                 UIAlertController.show(title: "We're Sorry!", message: error.localizedDescription, on: strongSelf)
             }
-
-            // save user
-            if let firUser = result?.user {
-                let user = User(id: firUser.uid, name: name)
-                user.persistToFirebase()
+            if success {
                 strongSelf.presentMain()
             }
         }
