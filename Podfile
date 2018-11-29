@@ -13,6 +13,5 @@ inherit! :search_paths
   pod 'Firebase/Auth'
   pod 'Firebase/Core'
   pod 'Firebase/Firestore'
-  pod 'PromiseKit'
 
 end
