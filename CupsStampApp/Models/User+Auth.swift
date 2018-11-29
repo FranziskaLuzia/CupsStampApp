@@ -2,7 +2,7 @@
 //  User+Auth.swift
 //  CupsStampApp
 //
-//  Created by Florian Thompson on 11/28/18.
+//  Created by Franziska Kammerl on 11/28/18.
 //  Copyright © 2018 Franziska Kammerl. All rights reserved.
 //
 

@@ -13,6 +13,8 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var emailTextfield: UITextField!
     @IBOutlet weak var passwordTextfield: UITextField!
     @IBOutlet weak var signupButton: UIButton!
+
+    private let spinner = Spinner()
     
     private var name: String? {
         didSet { changeSignupButtonStateIfNeeded() }
@@ -40,6 +42,10 @@ class SignUpViewController: UIViewController {
         nameTextfield.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         emailTextfield.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         passwordTextfield.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+
+        // Spinner
+        view.addSubview(spinner)
+        spinner.center = view.center
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
@@ -80,8 +86,11 @@ class SignUpViewController: UIViewController {
             return
         }
 
+        spinner.show()
+
         User.signUp(with: email, password: password, name: name) { [weak self] success, error in
             guard let strongSelf = self else { return }
+            strongSelf.spinner.hide()
             if let error = error {
                 UIAlertController.show(title: "We're Sorry!", message: error.localizedDescription, on: strongSelf)
             }

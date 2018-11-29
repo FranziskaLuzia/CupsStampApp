@@ -12,6 +12,8 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var emailTextfield: UITextField!
     @IBOutlet weak var passwordTextfield: UITextField!
     @IBOutlet weak var signInButton: UIButton!
+
+    private let spinner = Spinner()
     
     private var email: String? {
         didSet { changeSigInButtonStateIfNeeded() }
@@ -37,6 +39,10 @@ class LoginViewController: UIViewController {
         passwordTextfield.tag = passwordTag
         emailTextfield.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         passwordTextfield.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+
+        // Spinner
+        view.addSubview(spinner)
+        spinner.center = view.center
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -63,8 +69,11 @@ class LoginViewController: UIViewController {
             return
         }
 
+        spinner.show()
+
         User.signIn(with: email, password: password) { [weak self] success, error in
             guard let strongSelf = self else { return }
+            strongSelf.spinner.hide()
             if let error = error {
                 UIAlertController.show(title: "We're Sorry!", message: error.localizedDescription, on: strongSelf)
             }
@@ -96,16 +105,5 @@ extension LoginViewController {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         let vc = sb.instantiateViewController(withIdentifier: "Main")
         present(vc, animated: false, completion: nil)
-    }
-}
-
-extension UIAlertController {
-    static func show(title: String, message: String, on viewController: UIViewController, shouldAddCancelButton: Bool = false, okCallback: ((UIAlertAction) -> Void)? = nil) {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: okCallback))
-        if shouldAddCancelButton {
-            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        }
-        viewController.present(alertController, animated: true, completion: nil)
     }
 }
