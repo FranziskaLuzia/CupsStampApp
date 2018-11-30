@@ -45,10 +45,15 @@ class SignUpViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapView)))
 
         // Spinner
         view.addSubview(spinner)
         spinner.center = view.center
+    }
+
+    @objc func didTapView(_ ges: UITapGestureRecognizer) {
+        view.endEditing(true)
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
@@ -89,6 +94,7 @@ class SignUpViewController: UIViewController {
             return
         }
 
+        view.endEditing(true)
         spinner.show()
 
         User.signUp(with: email, password: password, name: name) { [weak self] success, error in
@@ -102,20 +108,23 @@ class SignUpViewController: UIViewController {
             }
         }
     }
-    
+}
+
+// MARK: Keyboard Listener
+
+extension SignUpViewController {
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0{
-                self.view.frame.origin.y -= keyboardSize.height
+            if view.frame.origin.y == 0 {
+                view.frame.origin.y -= keyboardSize.height
             }
         }
     }
-    
+
     @objc func keyboardWillHide(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y != 0{
-                self.view.frame.origin.y += keyboardSize.height
-            }
+        if let _ = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            guard view.frame.origin.y != 0 else { return }
+            view.frame.origin.y = 0
         }
     }
 }
