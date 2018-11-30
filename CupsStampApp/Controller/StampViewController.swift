@@ -38,9 +38,8 @@ class StampViewController: UIViewController {
         guard let user = user else { return "" }
         return user.numberOfStars >= 7 ? "Your punch card looks good!" : "Let's get some more coffee!"
     }
-    private var user: User? {
+    private var user: User? = User.fetchLocally() {
         didSet {
-            guard let user = user, user != oldValue else { return }
             refresh()
         }
     }
@@ -50,8 +49,10 @@ class StampViewController: UIViewController {
         super.viewDidLoad()
         earnedDrinksButton.isHidden = true
         earnedDrinksButton.layer.cornerRadius = 15
-        user = User.fetchLocally()
-        User.sync() { self.user = $0 }
+        User.sync() { [weak self] in
+            self?.user = $0
+            self?.refresh()
+        }
     }
 
     private func signout() {
@@ -67,13 +68,13 @@ class StampViewController: UIViewController {
         let alert = UIAlertController(title: nil, message: "How many stamps do you want to add?", preferredStyle: .alert)
         alert.setValue(pickerContainerView, forKey: "contentViewController")
         alert.addTextField { field in
+            field.isSecureTextEntry = true
             field.placeholder = "Password"
         }
         let okAction = UIAlertAction(title: "OK", style: .default) { action in
             let field = alert.textFields!.first!
             completion(field.text ?? "")
         }
-
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         alert.addAction(okAction)
         alert.addAction(cancelAction)

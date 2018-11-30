@@ -46,13 +46,12 @@ class User: NSObject {
     convenience init?(dict: [String: Any]) {
         guard
             let id = dict[User.Keys.id.rawValue] as? String,
-            let name = dict[User.Keys.name.rawValue] as? String,
-            let stamps = dict[User.Keys.stamps.rawValue] as? Int
+            let name = dict[User.Keys.name.rawValue] as? String
         else {
             return nil
         }
 
-        self.init(id: id, name: name, stamps: stamps)
+        self.init(id: id, name: name, stamps: dict[User.Keys.stamps.rawValue] as? Int ?? 0)
     }
 
     required init(from decoder: Decoder) throws {

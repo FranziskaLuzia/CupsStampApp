@@ -27,12 +27,6 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Present main if already signed in
-        if User.isSignedIn {
-            presentMain()
-            return
-        }
-
         signInButton.isEnabled = false
         signInButton.setTitleColor(UIColor.lightGray, for: .disabled)
         emailTextfield.tag = emailTag
@@ -43,6 +37,12 @@ class LoginViewController: UIViewController {
         // Spinner
         view.addSubview(spinner)
         spinner.center = view.center
+
+        // Present main if already signed in
+        if User.isSignedIn {
+            presentMain()
+            return
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -96,12 +96,20 @@ class LoginViewController: UIViewController {
 
         signInButton.isEnabled = true
     }
+
+    private func resetFields() {
+        emailTextfield.text = nil
+        passwordTextfield.text = nil
+        email = nil
+        password = nil
+    }
 }
 
 // Mark: Navigation
 
 extension LoginViewController {
     private func presentMain() {
+        resetFields()
         let sb = UIStoryboard(name: "Main", bundle: nil)
         let vc = sb.instantiateViewController(withIdentifier: "Main")
         present(vc, animated: false, completion: nil)

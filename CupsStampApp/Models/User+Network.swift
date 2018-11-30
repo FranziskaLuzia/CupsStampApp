@@ -11,31 +11,26 @@ import FirebaseFirestore
 import Firebase
 
 extension User {
-    private static var currentUserId: String {
-        return Firebase.Auth.auth().currentUser?.uid ?? ""
-    }
-
-    private static var documentReference: DocumentReference = {
-        return Firestore.firestore().collection("users").document(currentUserId)
-    }()
-
     static func sync(completion: @escaping (User?) -> Void) {
-        documentReference.getDocument { doc, error in
+        let currentUserId = Firebase.Auth.auth().currentUser?.uid ?? ""
+        let reference = Firestore.firestore().collection("users").document(currentUserId)
+        reference.getDocument { doc, error in
             guard
                 let doc = doc?.data(),
-                let name = doc[User.Keys.name.rawValue] as? String,
-                let stamps = doc[User.Keys.stamps.rawValue] as? Int
+                let name = doc[User.Keys.name.rawValue] as? String
             else { return completion(nil) }
             let dict: [String: Any] = [User.Keys.id.rawValue: currentUserId,
                                        User.Keys.name.rawValue: name,
-                                       User.Keys.stamps.rawValue: stamps]
+                                       User.Keys.stamps.rawValue: (doc[User.Keys.stamps.rawValue] as? Int) ?? 0]
             completion(User(dict: dict))
         }
     }
 
-    func persistToFirebase() {
+    func persistToFirebase(completion: @escaping (Error?) -> Void) {
         let doc = Firestore.firestore().collection("users").document(id)
-        doc.setData([Keys.name.rawValue: name])
+        doc.setData([Keys.name.rawValue: name]) { error in
+            completion(error)
+        }
     }
 
     func updateStampsOnBackend() {

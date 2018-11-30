@@ -19,4 +19,9 @@ extension User {
             return nil
         }
     }
+
+    static func clearDefaults() {
+//        UserDefaults.standard.removeObject(forKey: User.documentIdentifier)
+        UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier ?? "")
+    }
 }

@@ -114,22 +114,12 @@ PODS:
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
-  - PromiseKit (6.5.2):
-    - PromiseKit/CorePromise (= 6.5.2)
-    - PromiseKit/Foundation (= 6.5.2)
-    - PromiseKit/UIKit (= 6.5.2)
-  - PromiseKit/CorePromise (6.5.2)
-  - PromiseKit/Foundation (6.5.2):
-    - PromiseKit/CorePromise
-  - PromiseKit/UIKit (6.5.2):
-    - PromiseKit/CorePromise
   - Protobuf (3.6.1)
 
 DEPENDENCIES:
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Firestore
-  - PromiseKit
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -151,7 +141,6 @@ SPEC REPOS:
     - GTMSessionFetcher
     - leveldb-library
     - nanopb
-    - PromiseKit
     - Protobuf
 
 SPEC CHECKSUMS:
@@ -173,9 +162,8 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 0c4baf0a73acd0041bf9f71ea018deedab5ea84e
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
-  PromiseKit: 27c1601bfb73405871b805bcb8cf7e55c4dad3db
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
 
-PODFILE CHECKSUM: e32a69036c757c27c3d604dc78bf4547be71f215
+PODFILE CHECKSUM: 8426c414d247b6df947ee513dd22a184a2c9412b
 
 COCOAPODS: 1.5.0

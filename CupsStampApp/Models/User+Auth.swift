@@ -13,6 +13,7 @@ extension User {
     static var isSignedIn: Bool {
         return Firebase.Auth.auth().currentUser != nil
     }
+
     static func signIn(with email: String, password: String, completion: @escaping (Bool, Error?) -> Void) {
         Firebase.Auth.auth().signIn(withEmail: email, password: password) { result, error in
             if let error = error {
@@ -31,13 +32,19 @@ extension User {
             // save user
             if let firUser = result?.user {
                 let user = User(id: firUser.uid, name: name)
-                user.persistToFirebase()
-                completion(true, nil)
+                user.persistToFirebase() { error in
+                    if let error = error {
+                        completion(false, error)
+                        return
+                    }
+                    completion(true, nil)
+                }
             }
         }
     }
 
     static func signOut() throws {
+        clearDefaults()
         try Firebase.Auth.auth().signOut()
     }
 }
